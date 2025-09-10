@@ -6,11 +6,7 @@ import { company } from '@/content/company';
 export default function NameMeaning() {
   const { t } = useLanguage();
 
-  const meanings = [
-    company.nameMeaning.diversity,
-    company.nameMeaning.balance,
-    company.nameMeaning.crossing,
-  ];
+  const meanings = company.meanings;
 
   return (
     <section className="py-16 md:py-24 bg-white">
@@ -34,7 +30,7 @@ export default function NameMeaning() {
                 {t(meaning.title)}
               </h3>
               <p className="text-zinc-600 leading-relaxed">
-                {t(meaning.body)}
+                {t(meaning.content)}
               </p>
             </div>
           ))}
