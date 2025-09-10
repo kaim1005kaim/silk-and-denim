@@ -464,10 +464,10 @@ class FigmaToAIConverter {
             ...data
           })),
           spacing: this.designSystem.spacing,
-          components: Array.from(this.designSystem.components.entries()).map(([name, data]) => ({
-            name,
-            ...data
-          })),
+          components: Array.from(this.designSystem.components.entries()).map(([name, data]) => {
+            const { name: _name, ...rest } = data as any;
+            return { name, ...rest };
+          }),
           patterns: this.designSystem.patterns
         },
         analytics: {
