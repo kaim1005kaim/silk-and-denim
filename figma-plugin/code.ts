@@ -455,10 +455,10 @@ class FigmaToAIConverter {
       const serializedExport = {
         ...this.exportData,
         designSystem: {
-          colors: Array.from(this.designSystem.colors.entries()).map(([hex, data]) => ({
-            hex,
-            ...data
-          })),
+          colors: Array.from(this.designSystem.colors.entries()).map(([hex, data]) => {
+            const { hex: _hex, ...rest } = data as any;
+            return { hex, ...rest };
+          }),
           typography: Array.from(this.designSystem.typography.entries()).map(([key, data]) => ({
             key,
             ...data
