@@ -539,10 +539,11 @@ figma.ui.onmessage = async (msg) => {
         figma.ui.postMessage({ type: 'status', message: '送信完了！' });
       }
 
-    } catch (error) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       figma.ui.postMessage({ 
         type: 'error', 
-        message: error.toString() 
+        message
       });
     }
   }
