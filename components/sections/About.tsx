@@ -14,8 +14,7 @@ export default function About() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
-        ease: 'easeOut'
+        duration: 0.8
       }
     }
   };
@@ -28,7 +27,7 @@ export default function About() {
       transition: {
         duration: 0.6,
         delay: 0.3,
-        ease: 'easeOut'
+        // no ease specified to satisfy TS on Vercel's framer-motion types
       }
     }
   };
