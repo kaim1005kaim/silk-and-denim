@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma to AI Bridge</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #333;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #000;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .section {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .options {
+      margin-bottom: 20px;
+    }
+
+    .option-group {
+      margin-bottom: 16px;
+    }
+
+    .option-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    input[type="text"], input[type="url"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+    }
+
+    input[type="text"]:focus, input[type="url"]:focus {
+      outline: none;
+      border-color: #0066ff;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #0066ff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0052cc;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f0f8ff;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #0066ff;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.error {
+      background: #fff0f0;
+      color: #cc0000;
+    }
+
+    .status.success {
+      background: #f0fff0;
+      color: #00cc00;
+    }
+
+    .results {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .results.show {
+      display: block;
+    }
+
+    .result-item {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .result-desc {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .progress {
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #0066ff;
+      border-radius: 2px;
+      transition: width 0.3s;
+      width: 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      font-size: 11px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .tag.component {
+      background: #e6f3ff;
+      color: #0066ff;
+    }
+
+    .tag.pattern {
+      background: #fff0e6;
+      color: #ff6600;
+    }
+
+    .tag.ai {
+      background: #f0e6ff;
+      color: #6600ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 Figma to AI Bridge</h1>
+    <p class="subtitle">
+      FigmaデザインをAIが理解できる形式に変換し、MCP経由で送信します
+    </p>
+
+    <!-- 統計情報 -->
+    <div class="stats" id="stats" style="display: none;">
+      <div class="stat-item">
+        <div class="stat-label">総ノード数</div>
+        <div class="stat-value" id="totalNodes">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">コンポーネント</div>
+        <div class="stat-value" id="totalComponents">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">カラー数</div>
+        <div class="stat-value" id="totalColors">0</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">パターン</div>
+        <div class="stat-value" id="totalPatterns">0</div>
+      </div>
+    </div>
+
+    <!-- オプション -->
+    <div class="options">
+      <div class="option-group">
+        <div class="option-label">解析オプション</div>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="analyzeStyles" checked>
+            <span>スタイル情報を含める</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="analyzeComponents" checked>
+            <span>コンポーネント分析</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="analyzeSemantics" checked>
+            <span>セマンティック分析（AI推論）</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="generateSuggestions" checked>
+            <span>改善提案を生成</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <div class="option-label">MCPサーバー設定（オプション）</div>
+        <label class="checkbox-item">
+          <input type="checkbox" id="sendToMCP">
+          <span>MCPサーバーへ送信</span>
+        </label>
+        <input 
+          type="url" 
+          id="mcpServerUrl" 
+          placeholder="http://localhost:3000/mcp" 
+          style="margin-top: 8px; display: none;"
+        >
+      </div>
+    </div>
+
+    <!-- ボタン -->
+    <div class="button-group">
+      <button class="btn-primary" id="analyzeBtn">
+        🔍 解析開始
+      </button>
+      <button class="btn-secondary" id="exportBtn" style="display: none;">
+        💾 JSONエクスポート
+      </button>
+    </div>
+
+    <!-- ステータス -->
+    <div class="status" id="status"></div>
+
+    <!-- プログレスバー -->
+    <div class="progress" id="progress" style="display: none;">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 結果表示 -->
+    <div class="results" id="results">
+      <div class="section">
+        <div class="section-title">
+          <span class="icon">🎨</span>
+          <span>デザインシステム</span>
+        </div>
+        <div id="designSystemResults"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="icon">🔧</span>
+          <span>コンポーネント候補</span>
+        </div>
+        <div id="componentResults"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="icon">💡</span>
+          <span>AI提案</span>
+        </div>
+        <div id="aiSuggestions"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let analysisData = null;
+
+    // MCPサーバー設定の表示切り替え
+    document.getElementById('sendToMCP').addEventListener('change', (e) => {
+      const urlInput = document.getElementById('mcpServerUrl');
+      urlInput.style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // 解析ボタン
+    document.getElementById('analyzeBtn').addEventListener('click', () => {
+      const options = {
+        type: 'analyze',
+        analyzeStyles: document.getElementById('analyzeStyles').checked,
+        analyzeComponents: document.getElementById('analyzeComponents').checked,
+        analyzeSemantics: document.getElementById('analyzeSemantics').checked,
+        generateSuggestions: document.getElementById('generateSuggestions').checked,
+        sendToMCP: document.getElementById('sendToMCP').checked,
+        serverUrl: document.getElementById('mcpServerUrl').value
+      };
+
+      parent.postMessage({ pluginMessage: options }, '*');
+      
+      showStatus('解析を開始しています...', 'info');
+      showProgress(true);
+    });
+
+    // エクスポートボタン
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      if (analysisData) {
+        const dataStr = JSON.stringify(analysisData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `figma-ai-export-${Date.now()}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+        
+        showStatus('JSONファイルをダウンロードしました', 'success');
+      }
+    });
+
+    // プラグインからのメッセージ処理
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      
+      if (msg.type === 'status') {
+        showStatus(msg.message, 'info');
+      }
+      
+      if (msg.type === 'error') {
+        showStatus(msg.message, 'error');
+        showProgress(false);
+      }
+      
+      if (msg.type === 'analysis-complete') {
+        analysisData = msg.data;
+        displayResults(msg.data);
+        showStatus('解析が完了しました！', 'success');
+        showProgress(false);
+        
+        // エクスポートボタンを表示
+        document.getElementById('exportBtn').style.display = 'block';
+        
+        // 統計情報を表示
+        document.getElementById('stats').style.display = 'grid';
+        updateStats(msg.data);
+      }
+    };
+
+    function showStatus(message, type = 'info') {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status show ${type}`;
+      
+      if (type === 'success' || type === 'error') {
+        setTimeout(() => {
+          status.classList.remove('show');
+        }, 5000);
+      }
+    }
+
+    function showProgress(show) {
+      const progress = document.getElementById('progress');
+      const progressBar = document.getElementById('progressBar');
+      
+      if (show) {
+        progress.style.display = 'block';
+        progressBar.style.width = '70%';
+      } else {
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+          progress.style.display = 'none';
+        }, 300);
+      }
+    }
+
+    function updateStats(data) {
+      document.getElementById('totalNodes').textContent = data.analytics.totalNodes;
+      document.getElementById('totalComponents').textContent = data.analytics.componentUsage.length || 0;
+      document.getElementById('totalColors').textContent = data.designSystem.colors.length || 0;
+      document.getElementById('totalPatterns').textContent = data.designSystem.patterns.length || 0;
+    }
+
+    function displayResults(data) {
+      const results = document.getElementById('results');
+      results.classList.add('show');
+      
+      // デザインシステム
+      const designSystem = document.getElementById('designSystemResults');
+      designSystem.innerHTML = '';
+      
+      if (data.designSystem.colors.length > 0) {
+        const colorItem = document.createElement('div');
+        colorItem.className = 'result-item';
+        colorItem.innerHTML = `
+          <div class="result-title">カラーパレット</div>
+          <div class="result-desc">${data.designSystem.colors.length}色を検出</div>
+        `;
+        designSystem.appendChild(colorItem);
+      }
+      
+      if (data.designSystem.typography.length > 0) {
+        const typoItem = document.createElement('div');
+        typoItem.className = 'result-item';
+        typoItem.innerHTML = `
+          <div class="result-title">タイポグラフィ</div>
+          <div class="result-desc">${data.designSystem.typography.length}種類のテキストスタイル</div>
+        `;
+        designSystem.appendChild(typoItem);
+      }
+      
+      // コンポーネント候補
+      const components = document.getElementById('componentResults');
+      components.innerHTML = '';
+      
+      if (data.analytics.componentUsage.length > 0) {
+        data.analytics.componentUsage.slice(0, 5).forEach(item => {
+          if (item.count > 2) {
+            const elem = document.createElement('div');
+            elem.className = 'result-item';
+            elem.innerHTML = `
+              <div class="result-title">${item.name}</div>
+              <div class="result-desc">
+                <span class="tag component">${item.count}回使用</span>
+                <span>コンポーネント化を推奨</span>
+              </div>
+            `;
+            components.appendChild(elem);
+          }
+        });
+      }
+      
+      // AI提案
+      const suggestions = document.getElementById('aiSuggestions');
+      suggestions.innerHTML = '';
+      
+      data.aiSuggestions.improvements.forEach(suggestion => {
+        const item = document.createElement('div');
+        item.className = 'result-item';
+        item.innerHTML = `
+          <div class="result-desc">
+            <span class="tag ai">改善</span>
+            ${suggestion}
+          </div>
+        `;
+        suggestions.appendChild(item);
+      });
+      
+      data.aiSuggestions.components.forEach(suggestion => {
+        const item = document.createElement('div');
+        item.className = 'result-item';
+        item.innerHTML = `
+          <div class="result-desc">
+            <span class="tag component">コンポーネント</span>
+            ${suggestion}
+          </div>
+        `;
+        suggestions.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>

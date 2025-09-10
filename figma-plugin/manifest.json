@@ -1,0 +1,14 @@
+{
+  "name": "Figma to AI Bridge - MCP Converter",
+  "id": "figma-ai-bridge-mcp",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma", "figjam"],
+  "permissions": ["currentuser", "activeusers"],
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "MCPサーバーとの通信およびAI処理のため"
+  },
+  "enableProposedApi": false
+}

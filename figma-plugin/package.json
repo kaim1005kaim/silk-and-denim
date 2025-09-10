@@ -1,0 +1,17 @@
+{
+  "name": "figma-plugin",
+  "version": "1.0.0",
+  "description": "購入したFigmaファイルや既存のデザインをAIが理解しやすい構造化データに変換する汎用プラグインです。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.117.0",
+    "typescript": "^5.9.2"
+  }
+}
